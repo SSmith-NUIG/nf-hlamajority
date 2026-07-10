@@ -12,10 +12,10 @@ process GET_IMGT {
     label 'HLALA_CONTAINER'
 
     input:
-        val imgt_commit
+    val imgt_commit
 
     output:
-        path "IMGTHLA", emit: repo
+    path "IMGTHLA", emit: repo
     
     script:
     """
@@ -31,11 +31,11 @@ process GET_KOURAMI {
     label 'HLALA_CONTAINER'
 
     input:
-        // 545c770
-        val kourami_commit
+    // 545c770
+    val kourami_commit
 
     output:
-        path "kourami", emit: repo
+    path "kourami", emit: repo
 
     script:
     """
@@ -53,10 +53,11 @@ process KOURAMI_DOWNLOAD_HS38NOALTDH {
     label 'HLALA_CONTAINER'
 
     input:
-        path kourami_repo
-        val expected_md5
+    path kourami_repo
+    val expected_md5
+
     output:
-        path("${kourami_repo}/resources/hs38NoAltDH.fa"), emit: reference
+    path("${kourami_repo}/resources/hs38NoAltDH.fa"), emit: reference
 
     script:
     """
@@ -78,12 +79,12 @@ process BUILD_KOURAMI {
     container 'kevinr9525/cancerit-kourami:wget' 
     
     input:
-        path imgt_repo
-        val imgt_version
-        path kourami_repo, stageAs: 'kourami_src' 
+    path imgt_repo
+    val imgt_version
+    path kourami_repo, stageAs: 'kourami_src' 
 
     output:
-        path "kourami" 
+    path "kourami" 
 
     script:
     """
@@ -112,11 +113,11 @@ process BUILD_BWAKIT {
     publishDir "${params.references_basedir}/bwakit", mode: 'copy' 
 
     input:
-        val expected_md5
+    val expected_md5
 
     output:
-        path ("hs38DH.fa"), emit: reference
-        path ("hs38DH.fa.alt")
+    path ("hs38DH.fa"), emit: reference
+    path ("hs38DH.fa.alt")
 
     script:
     """
@@ -136,10 +137,10 @@ process HLA_LA_REFERENCE_DOWNLOAD {
     label 'HLALA_CONTAINER'
 
     input:
-        val expected_md5
+    val expected_md5
 
     output:
-        path("PRG_MHC_GRCh38_withIMGT.tar.gz"), emit: reference_zip
+    path("PRG_MHC_GRCh38_withIMGT.tar.gz"), emit: reference_zip
 
     script:
     """
@@ -159,11 +160,11 @@ process HLA_LA_REFERENCE_PREPARE {
     publishDir "${params.references_basedir}/hla-la", mode: 'copy'
 
     input:
-        path(hla_la_reference_gzip)
+    path(hla_la_reference_gzip)
 
     output:
-        path("PRG_MHC_GRCh38_withIMGT")
-        path("PRG_MHC_GRCh38_withIMGT/extendedReferenceGenome/extendedReferenceGenome.fa"), emit: extended_ref
+    path("PRG_MHC_GRCh38_withIMGT")
+    path("PRG_MHC_GRCh38_withIMGT/extendedReferenceGenome/extendedReferenceGenome.fa"), emit: extended_ref
 
     script:
     """
@@ -176,10 +177,10 @@ process POLYSOLVER_REFERENCE_DOWNLOAD {
     publishDir "${params.references_basedir}/polysolver", mode: 'copy'
 
     input:
-        val expected_md5
+    val expected_md5
 
     output:
-        path("GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"), emit: reference
+    path("GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"), emit: reference
 
     script:
     """
