@@ -84,21 +84,25 @@ The pipeline accepts the following input file types:
 - Aligned BAM
 - CRAM
 
-It is designed for paired-end DNA sequencing data, but will also accept single-end data. However, HLA genotyping using single-end data is less reliable than paired-end and is not recommended.
+It is designed for paired-end DNA sequencing data, but will also accept single-end FASTQs. If single-end data is provided, Optitype is the only tool that will run.
 
 #### Test data
 
-To ensure the pipeline is working as expected, the test profile should be run first. `--outdir` is the directory where the `nf-hlamajority` results will be stored.
+To ensure the pipeline is working as expected, one of the test profiles (`test`, `test_paired`, or `test_single_end`) should be run first. `--outdir` is the directory where the `nf-hlamajority` results will be stored.
 
 ```bash
 nextflow run main.nf \
        --outdir <OUTDIR> \
-       -profile <test,singularity/docker/awsbatch>
+       -profile <test/test_paired/test_single_end,singularity/docker/awsbatch>
 ```
 
-The test dataset is a CRAM file (316 MB) provided through the [HLA*LA GitHub repository](https://github.com/DiltheyLab/HLA-LA/tree/master) (1000 Genomes sample NA12878).
+The test sample is 1000 Genomes NA12878. The CRAM file (316 MB) is provided through the [HLA*LA GitHub repository](https://github.com/DiltheyLab/HLA-LA/tree/master). The FASTQs are hosted on [Zenodo](https://zenodo.org/records/21342551).
 
-The expected outputs of each tool from the test dataset can be found at `assets/test-outputs/test-outputs-1000genomes/NA12878/`
+The expected outputs of each tool from the test dataset can be found at:
+
+- `assets/test-outputs/test-outputs-1000genomes/NA12878/` (profile `test`)
+- `assets/test-outputs/test-outputs-1000genomes/NA12878_paired/` (profile `test_paired`)
+- `assets/test-outputs/test-outputs-1000genomes/NA12878_single_end/` (profile `test_single_end`)
 
 #### Running on full datasets
        
@@ -113,7 +117,25 @@ SAMPLE2,SAMPLE2_S1_L003_R1_001.fastq.gz,SAMPLE2_S1_L003_R2_001.fastq.gz
 SAMPLE3,SAMPLE3_S1_L004_R1_001.fastq.gz,SAMPLE3_S1_L004_R2_001.fastq.gz
 ```
 
-or if you are using an aligned data type (BAM, CRAM), prepare the samplesheet as follows:
+If your data is single-end:
+
+```csv
+sample,fastq_1,fastq_2
+SAMPLE1,SAMPLE1_S1_L002_R1_001.fastq.gz,
+SAMPLE2,SAMPLE2_S1_L003_R1_001.fastq.gz,
+SAMPLE3,SAMPLE3_S1_L004_R1_001.fastq.gz,
+```
+
+You can provide a mixture of single-end and paired-end samples:
+
+```csv
+sample,fastq_1,fastq_2
+SAMPLE1,SAMPLE1_S1_L002_R1_001.fastq.gz,SAMPLE1_S1_L002_R2_001.fastq.gz
+SAMPLE2,SAMPLE2_S1_L003_R1_001.fastq.gz,
+SAMPLE3,SAMPLE3_S1_L004_R1_001.fastq.gz,SAMPLE3_S1_L004_R2_001.fastq.gz
+```
+
+If you are using an aligned data type (BAM, CRAM), prepare the samplesheet as follows:
 
 ```csv
 sample,aln
