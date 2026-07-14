@@ -102,6 +102,26 @@ workflow {
     }
     | set { ch_fastq }
     trim = params.trim
+
+    // issue message if single-end data is provided
+    ch_fastq
+        .filter { meta, reads -> meta.single_end }
+        .map { meta, reads -> meta.sample }
+        .collect()
+        .map { samples ->
+
+            if (samples.size() > 0) {
+                log.warn """
+                Single-end data detected.
+
+                ${samples.size()} sample(s) will only be processed by OptiType.
+                Other HLA typing tools require paired-end reads.
+                """
+            }
+
+            samples
+        }
+
     }
 // example ch_fastq: [[sample:3532, seq_type:dna], [/data4/kryan/misc/useful/nextflow/nf-hlatyping/testdir/gen_testdata/3532_subset_10000.1.fq.gz, /data4/kryan/misc/useful/nextflow/nf-hlatyping/testdir/gen_testdata/3532_subset_10000.2.fq.gz]]
 
