@@ -32,11 +32,21 @@ workflow KOURAMI {
         .join(RUN_KOURAMI_JAR.out.kourami_result, remainder: true)
         
         // Split into Success vs Failure
-        .branch { meta, result ->
-            success: result != null
-                return [meta, result] // Return the [meta, path] tuple
-            failure: result == null
-                return meta   // Return just [meta] for the placeholder
+        //.branch { meta, result ->
+        //    success: result != null
+        //        return [meta, result] // Return the [meta, path] tuple
+        //    failure: result == null
+        //        return meta   // Return just [meta] for the placeholder
+        //}
+        .branch { item ->
+        def meta = item[0]
+        def results = item.size() > 1 ? item[1] : null
+
+        success: results != null
+            return [meta, results]
+
+        failure: results == null
+            return meta
         }
         .set { ch_kourami_routing }
 
