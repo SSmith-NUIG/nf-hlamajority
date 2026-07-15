@@ -9,7 +9,11 @@ process RUN_POLYSOLVER {
     tuple val(meta), path("polysolver_calls"), emit: polysolver_call
     tuple val(meta), path("counts*"), optional: true
     path("check.status.out.txt"), optional: true
-    path("${meta.sample}.polysolver_status.tsv"), emit: run_status
+    //path("${meta.sample}.polysolver_status.tsv"), emit: run_status
+    path("STATUS.txt")
+
+    when:
+    !meta.single_end
 
     script:
     """
@@ -18,15 +22,38 @@ process RUN_POLYSOLVER {
 
     if /home/polysolver/scripts/shell_call_hla_type ${bam} Unknown 0 hg38 ILMFQ 0 ./ tempdir; then
         mv winners.hla.nofreq.txt polysolver_calls/
-        printf "${meta.sample}\\tPASS\\n" > ${meta.sample}.polysolver_status.tsv
+        printf "${meta.sample}\\tPolysolver\\tSUCCESS\\n" > STATUS.txt
 
     else
         printf "HLA-A\\tNA\\tNA\\n" > polysolver_calls/winners.hla.nofreq.txt
         printf "HLA-B\\tNA\\tNA\\n" >> polysolver_calls/winners.hla.nofreq.txt
         printf "HLA-C\\tNA\\tNA\\n" >> polysolver_calls/winners.hla.nofreq.txt
-        printf "${meta.sample}\\tFAIL\\n" > ${meta.sample}.polysolver_status.tsv
+        printf "${meta.sample}\\tPolysolver\\tTOOL_FAILURE\\n" > STATUS.txt
     fi
 
     rm -rf tempdir
+    """
+}
+
+process RUN_POLYSOLVER_PLACEHOLDER_SINGLE_END {
+    tag "$meta.sample"
+
+    publishDir "${params.outdir}/polysolver_calls/${meta.sample}", mode: 'copy'
+
+    input:
+    val meta
+
+    output:
+    tuple val(meta), path("polysolver_calls"), emit: polysolver_call
+    path("STATUS.txt")
+
+    script:
+    """
+    mkdir -p polysolver_calls
+    printf "HLA-A\\tNA\\tNA\\n" > polysolver_calls/winners.hla.nofreq.txt
+    printf "HLA-B\\tNA\\tNA\\n" >> polysolver_calls/winners.hla.nofreq.txt
+    printf "HLA-C\\tNA\\tNA\\n" >> polysolver_calls/winners.hla.nofreq.txt
+
+    echo "${meta.sample}\tPolysolver\tSKIPPED_SINGLE_END" > STATUS.txt
     """
 }
