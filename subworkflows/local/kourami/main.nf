@@ -130,5 +130,8 @@ workflow KOURAMI {
     emit:
     //calls = ch_kourami_routing.success.mix(RUN_KOURAMI_PLACEHOLDER.out.kourami_result)
     calls = RUN_KOURAMI_JAR.out.kourami_result.mix(RUN_KOURAMI_PLACEHOLDER.out.kourami_result)
-                                              .mix(RUN_KOURAMI_PLACEHOLDER_SE.out.kourami_result) 
+                                              .mix(RUN_KOURAMI_PLACEHOLDER_SE.out.kourami_result)
+    status = RUN_KOURAMI_JAR.out.run_status
+            .mix(RUN_KOURAMI_PLACEHOLDER.out.run_status)
+            .mix(RUN_KOURAMI_PLACEHOLDER_SE.out.run_status) 
 }

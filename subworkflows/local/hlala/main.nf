@@ -130,7 +130,6 @@ workflow HLA_LA {
         }
         .set { hla_input }
 
-    bam.view()
     // Run HLA-LA only on paired-end samples
     RUN_HLALA(
         hla_input.paired,
@@ -197,7 +196,6 @@ workflow HLA_LA {
 
     failed_hlala_single = failed_hlala.single
     failed_hlala_paired = failed_hlala.paired
-    failed_hlala_single.view()
 
     RUN_HLALA_PLACEHOLDER_SINGLE_END(
         failed_hlala.single
@@ -213,5 +211,9 @@ workflow HLA_LA {
         RUN_HLALA.out.hlala_call
         .mix(RUN_HLALA_PLACEHOLDER_SINGLE_END.out.hlala_call)
         .mix(RUN_HLALA_PLACEHOLDER_FAILURE.out.hlala_call)
+   
+    status = RUN_HLALA.out.run_status
+            .mix(RUN_HLALA_PLACEHOLDER_SINGLE_END.out.run_status)
+            .mix(RUN_HLALA_PLACEHOLDER_FAILURE.out.run_status)
     
 }

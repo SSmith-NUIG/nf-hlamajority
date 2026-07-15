@@ -75,5 +75,6 @@ workflow POLYSOLVER{
     emit:
     calls = RUN_POLYSOLVER.out.polysolver_call
                               .mix(RUN_POLYSOLVER_PLACEHOLDER_SINGLE_END.out.polysolver_call)
-    //status = RUN_POLYSOLVER.out.run_status 
+    status = RUN_POLYSOLVER.out.run_status 
+                               .mix(RUN_POLYSOLVER_PLACEHOLDER_SINGLE_END.out.run_status)
 }
