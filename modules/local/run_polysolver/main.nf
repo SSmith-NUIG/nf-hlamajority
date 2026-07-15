@@ -5,7 +5,7 @@ process RUN_POLYSOLVER {
     input:
     tuple val(meta), path(bam), path(idx)
     path novoalign
-    path novolicense
+    path novolicense optional true
 
     output:
     tuple val(meta), path("polysolver_calls"), emit: polysolver_call
@@ -17,6 +17,12 @@ process RUN_POLYSOLVER {
     """
     export NOVOALIGN_DIR=\$PWD
     chmod +x novoalign
+
+    if [ -f novolicense ]; then
+        echo "Using Novoalign license"
+    else
+        echo "No Novoalign license provided - if your Novoalign is v4+ it will not run without a license"
+    fi
 
     mkdir -p polysolver_calls
     mkdir -p tempdir
