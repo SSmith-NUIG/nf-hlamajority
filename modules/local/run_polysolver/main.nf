@@ -10,7 +10,7 @@ process RUN_POLYSOLVER {
     tuple val(meta), path("counts*"), optional: true
     path("check.status.out.txt"), optional: true
     //path("${meta.sample}.polysolver_status.tsv"), emit: run_status
-    path("STATUS.txt")
+    tuple val(meta), path("${meta.sample}.polysolver.STATUS.txt"), emit: run_status
 
     when:
     !meta.single_end
@@ -22,13 +22,13 @@ process RUN_POLYSOLVER {
 
     if /home/polysolver/scripts/shell_call_hla_type ${bam} Unknown 0 hg38 ILMFQ 0 ./ tempdir; then
         mv winners.hla.nofreq.txt polysolver_calls/
-        printf "${meta.sample}\\tPolysolver\\tSUCCESS\\n" > STATUS.txt
+        printf "${meta.sample}\\tPolysolver\\tSUCCESS\\n" > "${meta.sample}.polysolver.STATUS.txt"
 
     else
         printf "HLA-A\\tNA\\tNA\\n" > polysolver_calls/winners.hla.nofreq.txt
         printf "HLA-B\\tNA\\tNA\\n" >> polysolver_calls/winners.hla.nofreq.txt
         printf "HLA-C\\tNA\\tNA\\n" >> polysolver_calls/winners.hla.nofreq.txt
-        printf "${meta.sample}\\tPolysolver\\tTOOL_FAILURE\\n" > STATUS.txt
+        printf "${meta.sample}\\tPolysolver\\tTOOL_FAILURE\\n" > "${meta.sample}.polysolver.STATUS.txt"
     fi
 
     rm -rf tempdir
@@ -45,7 +45,7 @@ process RUN_POLYSOLVER_PLACEHOLDER_SINGLE_END {
 
     output:
     tuple val(meta), path("polysolver_calls"), emit: polysolver_call
-    path("STATUS.txt")
+    tuple val(meta), path("${meta.sample}.polysolver.STATUS.txt"), emit: run_status
 
     script:
     """
@@ -54,6 +54,6 @@ process RUN_POLYSOLVER_PLACEHOLDER_SINGLE_END {
     printf "HLA-B\\tNA\\tNA\\n" >> polysolver_calls/winners.hla.nofreq.txt
     printf "HLA-C\\tNA\\tNA\\n" >> polysolver_calls/winners.hla.nofreq.txt
 
-    echo "${meta.sample}\tPolysolver\tSKIPPED_SINGLE_END" > STATUS.txt
+    echo "${meta.sample}\tPolysolver\tSKIPPED_SINGLE_END" > "${meta.sample}.polysolver.STATUS.txt"
     """
 }

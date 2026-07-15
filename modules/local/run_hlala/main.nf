@@ -9,7 +9,8 @@ process RUN_HLALA {
 
     output:
     tuple val(meta), path("hlala_calls"), emit: hlala_call
-    path("STATUS.txt")
+    tuple val(meta), path("${meta.sample}.hlala.STATUS.txt"), emit: run_status
+
     when:
     !meta.single_end
 
@@ -26,7 +27,7 @@ process RUN_HLALA {
         --maxThreads ${task.cpus}
 
     cp "${meta.sample}/hla/R1_bestguess_G.txt" hlala_calls/
-    echo "${meta.sample}\tHLA-LA\tSUCCESS" > STATUS.txt
+    echo "${meta.sample}\tHLA-LA\tSUCCESS" > "${meta.sample}.hlala.STATUS.txt"
     """
 }
 
@@ -40,7 +41,7 @@ process RUN_HLALA_PLACEHOLDER_SINGLE_END {
 
     output:
     tuple val(meta), path("hlala_calls"), emit: hlala_call
-    path("STATUS.txt")
+    tuple val(meta), path("${meta.sample}.hlala.STATUS.txt"), emit: run_status
 
     script:
     """
@@ -51,7 +52,7 @@ process RUN_HLALA_PLACEHOLDER_SINGLE_END {
         echo -e "\${locus}\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA" >> hlala_calls/R1_bestguess_G.txt
     done
 
-    echo "${meta.sample}\tHLA-LA\tSKIPPED_SINGLE_END" > STATUS.txt
+    echo "${meta.sample}\tHLA-LA\tSKIPPED_SINGLE_END" > "${meta.sample}.hlala.STATUS.txt"
     """
 }
 
@@ -65,7 +66,7 @@ process RUN_HLALA_PLACEHOLDER_FAILURE {
 
     output:
     tuple val(meta), path("hlala_calls"), emit: hlala_call
-    path("STATUS.txt")
+    tuple val(meta), path("${meta.sample}.hlala.STATUS.txt"), emit: run_status
 
     script:
     """
@@ -76,7 +77,6 @@ process RUN_HLALA_PLACEHOLDER_FAILURE {
         echo -e "\${locus}\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA\\tNA" >> hlala_calls/R1_bestguess_G.txt
     done
 
-    echo "${meta.sample}\tHLA-LA\tTOOL_FAILURE" > STATUS.txt
+    echo "${meta.sample}\tHLA-LA\tTOOL_FAILURE" > "${meta.sample}.hlala.STATUS.txt"
     """
 }
-
