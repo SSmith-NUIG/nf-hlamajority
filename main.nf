@@ -11,7 +11,8 @@ params.kourami_database = "${params.references_basedir}/kourami/custom_db/3.63.0
 params.kourami_ref = "${params.references_basedir}/kourami/resources/hs38NoAltDH.fa*"
 params.trim = true
 params.ref_polysolver = "${params.references_basedir}/polysolver/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna*"
-
+params.novoalign = "${projectDir}/bin/novoalign"
+params.novolicense = "${projectDir}/bin/novoalign.lic"
 
 params.hs38noaltdh_fa_md5 = null
 params.hs38dh_fa_md5      = null
@@ -137,6 +138,10 @@ workflow {
     | set { ch_fastq }
     trim = params.trim
     }
+
+   ch_novoalign    = Channel.value(file(params.novoalign))
+   ch_novolicense  = Channel.value(file(params.novolicense))
+
 // example ch_fastq: [[sample:3532, seq_type:dna], [/data4/kryan/misc/useful/nextflow/nf-hlatyping/testdir/gen_testdata/3532_subset_10000.1.fq.gz, /data4/kryan/misc/useful/nextflow/nf-hlatyping/testdir/gen_testdata/3532_subset_10000.2.fq.gz]]
 
     HLATYPING(
@@ -152,7 +157,9 @@ workflow {
         ch_fasta_cram,
         weights,
         params.voting_method,
-        params.ref_polysolver
+        params.ref_polysolver,
+        ch_novoalign,
+        ch_novolicense
     )
   }
 }

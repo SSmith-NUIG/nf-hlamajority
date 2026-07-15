@@ -4,6 +4,8 @@ process RUN_POLYSOLVER {
 
     input:
     tuple val(meta), path(bam), path(idx)
+    path novoalign
+    path novolicense
 
     output:
     tuple val(meta), path("polysolver_calls"), emit: polysolver_call
@@ -13,6 +15,9 @@ process RUN_POLYSOLVER {
 
     script:
     """
+    export NOVOALIGN_DIR=\$PWD
+    chmod +x novoalign
+
     mkdir -p polysolver_calls
     mkdir -p tempdir
 

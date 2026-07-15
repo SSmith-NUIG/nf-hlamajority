@@ -26,6 +26,8 @@ workflow HLATYPING {
     weights
     voting_method
     reference_polysolver
+    ch_novoalign
+    ch_novolicense
     main:
 
     ref = file(reference_dir, checkIfExists: true)
