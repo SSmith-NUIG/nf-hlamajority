@@ -192,7 +192,9 @@ workflow {
     }
 
    ch_novoalign    = Channel.value(file(params.novoalign))
-   ch_novolicense  = params.novolicense ? Channel.value(file(params.novolicense)) : Channel.value(null)
+   ch_novolicense = params.novolicense \
+    ? Channel.value(file(params.novolicense)) \
+    : Channel.value([])
 
 // example ch_fastq: [[sample:3532, seq_type:dna], [/data4/kryan/misc/useful/nextflow/nf-hlatyping/testdir/gen_testdata/3532_subset_10000.1.fq.gz, /data4/kryan/misc/useful/nextflow/nf-hlatyping/testdir/gen_testdata/3532_subset_10000.2.fq.gz]]
 

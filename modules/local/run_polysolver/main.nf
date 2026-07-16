@@ -5,7 +5,7 @@ process RUN_POLYSOLVER {
     input:
     tuple val(meta), path(bam), path(idx)
     path novoalign
-    val novolicense
+    path novolicense
 
     output:
     tuple val(meta), path("polysolver_calls"), emit: polysolver_call
@@ -20,11 +20,9 @@ process RUN_POLYSOLVER {
 
     if [[ -n "${novolicense}" && -s "${novolicense}" ]]; then
         echo "Using Novoalign license ${novolicense}"
-        cp "${novolicense}" .
     else
         echo "No Novoalign license provided"
     fi
-
 
     mkdir -p polysolver_calls
     mkdir -p tempdir
