@@ -74,7 +74,9 @@ workflow HLATYPING {
     POLYSOLVER(
         ALT_ALIGN.out,
         ref_polysolver,
-        fasta_cram
+        fasta_cram,
+        ch_novoalign,
+        ch_novolicense
     )
     
     HLA_LA(

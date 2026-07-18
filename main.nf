@@ -22,8 +22,8 @@ params.hla_la_tar_md5 = null
 params.hla_la_prg_tar_md5 = null
 
 // Eenforcement of novoalign placement
-def expected_novoalign = file("${projectDir}/bin/novoalign").canonicalPath
-def provided_novoalign = file(params.novoalign).canonicalPath
+def expected_novoalign = file("${projectDir}/bin/novoalign").toString()
+def provided_novoalign = file(params.novoalign).toString()
 
 if (expected_novoalign != provided_novoalign) {
     exit 1, """
@@ -42,8 +42,8 @@ if (!file(expected_novoalign).exists()) {
 // Enforcement of the optional novoalign license location
 if (params.novolicense) {
 
-    def expected_license = file("${projectDir}/bin/novoalign.lic").canonicalPath
-    def provided_license = file(params.novolicense).canonicalPath
+    def expected_license = file("${projectDir}/bin/novoalign.lic").toString()
+    def provided_license = file(params.novolicense).toString()
 
     if (expected_license != provided_license) {
         exit 1, """
@@ -62,7 +62,7 @@ You provided:
 
 log.info """
 Novoalign license (optional for novoalign binaries v3 or less but required for v4+):
-    If provided, it must be exactly:
+    If provided, it must be located at exactly:
         ${projectDir}/bin/novoalign.lic
 
 Example usage:
