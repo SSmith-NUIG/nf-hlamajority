@@ -189,6 +189,26 @@ workflow {
     }
     | set { ch_fastq }
     trim = params.trim
+
+    // issue message if single-end data is provided
+    ch_fastq
+        .filter { meta, reads -> meta.single_end }
+        .map { meta, reads -> meta.sample }
+        .collect()
+        .map { samples ->
+
+            if (samples.size() > 0) {
+                log.warn """
+                Single-end data detected.
+
+                ${samples.size()} sample(s) will only be processed by OptiType.
+                Other HLA typing tools require paired-end reads.
+                """
+            }
+
+            samples
+        }
+
     }
 
    ch_novoalign    = Channel.value(file(params.novoalign))
